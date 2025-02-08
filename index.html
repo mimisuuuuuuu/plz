@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-image: url('main_image.jpg'); /* 캡차 원본 */
+            background-image: url('main_image.jpg.jpg'); /* 캡차 원본 */
             background-size: cover;
             background-position: center;
             margin: 0;
@@ -68,17 +68,18 @@
             height: auto;
             margin-top: 10%;
         }
-        #confirmButton {
-            position: absolute;
-            left: 45%; /* 확인 버튼 위치 왼쪽으로 조정 */
-            top: 80%; /* 대략적인 값, 캡차 원본 확인 버튼 위치에 맞춰야 함 */
-            transform: translate(-50%, 0);
-            cursor: pointer;
-        }
         #reasonButton {
             margin-top: 10px;
             display: none;
             cursor: pointer;
+        }
+        .extra-image {
+            width: 360px;    /* 가로폭 */
+            height: 532px;   /* 세로높이 */
+            cursor: pointer;
+            position: absolute;
+            top: 304px;      /* 왼쪽 상단의 y좌표 */
+            left: 611px;     /* 왼쪽 상단의 x좌표 */
         }
     </style>
 </head>
@@ -95,10 +96,11 @@
         <img src="tile9.jpg" class="tile" onclick="selectTile(this)">
     </div>
 
-    <img id="confirmButton" src="confirm_button.png" class="hidden" onclick="showPopup()">
+    <!-- 추가 이미지 -->
+    <img src="extra_image.png" class="extra-image" onclick="showPopup()">
 
     <div id="popup" class="popup">
-        <img src="not_a_pigeon.jpg">
+        <p>이것은 비둘기가 아닙니다</p>
         <img id="reasonButton" src="reason_button.jpg" onclick="playVideo()">
     </div>
 
@@ -108,6 +110,7 @@
 
     <script>
         let selectedTiles = [];
+        let reasonButtonDisplayed = false;
 
         function selectTile(tile) {
             if (tile.classList.contains("selected")) {
@@ -119,14 +122,16 @@
                     selectedTiles.push(tile);
                 }
             }
-            document.getElementById("confirmButton").classList.toggle("hidden", selectedTiles.length !== 3);
         }
 
         function showPopup() {
             document.getElementById("popup").style.display = "block";
             setTimeout(() => {
-                document.getElementById("popup").style.display = "none"; // 팝업 사라짐
-                document.getElementById("reasonButton").style.display = "inline";
+                document.getElementById("popup").style.display = "none";
+                if (!reasonButtonDisplayed) {
+                    document.getElementById("reasonButton").style.display = "inline";
+                    reasonButtonDisplayed = true;
+                }
             }, 3000); // 3초 후 이유 보기 버튼 표시
         }
 
@@ -140,8 +145,7 @@
             document.getElementById("videoContainer").style.display = "none";
             selectedTiles.forEach(tile => tile.classList.remove("selected"));
             selectedTiles = [];
-            document.getElementById("confirmButton").classList.add("hidden");
-            document.getElementById("popup").style.display = "none";
+            reasonButtonDisplayed = false;
             document.getElementById("reasonButton").style.display = "none";
         }
     </script>
